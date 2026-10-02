@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erika Rosillon — Creative Web Developer & Designer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pastel: {
+                            blush: '#FFF0F5',
+                            rose: '#FFD1DC',
+                            deepRose: '#E08DA1',
+                            lavender: '#E6E6FA',
+                            cream: '#FAF0E6',
+                            gold: '#F4E0B9',
+                            softGreen: '#D8E2DC',
+                            darkBg: '#1A1523',
+                            darkCard: '#272033',
+                            darkText: '#E8DFF5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        handwritten: ['"Caveat"', 'cursive']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'sparkle': 'sparkle 2s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(3deg)' }
+                        },
+                        sparkle: {
+                            '0%, 100%': { opacity: '0.3', transform: 'scale(0.9)' },
+                            '50%': { opacity: '1', transform: 'scale(1.1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar for soft feel */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF0F5;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1A1523;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFB7C5;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E08DA1;
+        }
+
+        /* Canvas positions behind content */
+        #petalCanvas, #gardenCanvas {
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism soft effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 209, 220, 0.5);
+        }
+        .dark .glass-card {
+            background: rgba(39, 32, 51, 0.7);
+            border: 1px solid rgba(224, 141, 161, 0.2);
+        }
+
+        .glass-nav {
+            background: rgba(255, 240, 245, 0.85);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass-nav {
+            background: rgba(26, 21, 35, 0.85);
+        }
+
+        /* Floral gradient text */
+        .floral-gradient-text {
+            background: linear-gradient(135deg, #D87093 0%, #C71585 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .floral-gradient-text {
+            background: linear-gradient(135deg, #FFB7C5 0%, #E6E6FA 50%, #F4E0B9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #FFB7C5, #E08DA1);
+            transition: all 0.3s ease;
+        }
+        .gradient-btn:hover {
+            background: linear-gradient(135deg, #E08DA1, #D87093);
+            box-shadow: 0 8px 20px rgba(224, 141, 161, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Flower decorative border background */
+        .floral-border {
+            border-image: linear-gradient(45deg, #FFD1DC, #E6E6FA, #FFF0F5) 1;
+        }
+    </style>
+</head>
+
+<body class="bg-pastel-blush text-slate-700 dark:bg-pastel-darkBg dark:text-pastel-darkText transition-colors duration-500 font-sans selection:bg-pink-200 selection:text-pink-900 relative overflow-x-hidden">
+
+    <!-- Background Petals Canvas -->
+    <canvas id="petalCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-pink-100 dark:border-purple-900/30 transition-all duration-300 px-4 sm:px-8 py-3">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <span class="w-9 h-9 rounded-full bg-pink-200 dark:bg-pink-900/50 flex items-center justify-center text-pink-600 dark:text-pink-300 font-serif font-bold text-lg group-hover:scale-110 transition-transform shadow-sm">
+                    🌸
+                </span>
+                <span class="font-serif font-bold text-xl tracking-tight text-pink-900 dark:text-pink-100">
+                    Erika<span class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl ml-1">.R</span>
+                </span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex items-center gap-6 font-medium text-sm text-pink-950/80 dark:text-pink-100/80">
+                <a href="#about" class="hover:text-pink-600 dark:hover:text-pink-300 transition-colors">About</a>
+                <a href="#skills" class="hover:text-pink-600 dark:hover:text-pink-300 transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-pink-600 dark:hover:text-pink-300 transition-colors">Projects</a>
+                <a href="#garden" class="hover:text-pink-600 dark:hover:text-pink-300 transition-colors">Pastel Garden</a>
+                <a href="#contact" class="hover:text-pink-600 dark:hover:text-pink-300 transition-colors">Contact</a>
+            </div>
+
+            <!-- Header Right Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-pink-600 dark:text-pink-300 hover:scale-105 transition-all" title="Toggle Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-300"></i>
+                </button>
+
+                <!-- Hire Me CTA Button -->
+                <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white gradient-btn rounded-full shadow-md">
+                    <span>Let's Talk</span>
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-lg glass-card flex items-center justify-center text-pink-700 dark:text-pink-200">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden pt-4 pb-2 px-2 flex flex-col gap-3 font-medium text-center border-t border-pink-100 dark:border-purple-900/40 mt-3">
+            <a href="#about" class="py-2 hover:bg-pink-100/50 dark:hover:bg-purple-900/30 rounded-lg">About Me</a>
+            <a href="#skills" class="py-2 hover:bg-pink-100/50 dark:hover:bg-purple-900/30 rounded-lg">Skills</a>
+            <a href="#projects" class="py-2 hover:bg-pink-100/50 dark:hover:bg-purple-900/30 rounded-lg">Projects</a>
+            <a href="#garden" class="py-2 hover:bg-pink-100/50 dark:hover:bg-purple-900/30 rounded-lg">Interactive Garden</a>
+            <a href="#contact" class="py-2 hover:bg-pink-100/50 dark:hover:bg-purple-900/30 rounded-lg">Contact</a>
+        </div>
+    </nav>
+
+    <section class="min-h-screen relative flex items-center justify-center pt-24 pb-12 px-4 sm:px-6 z-10">
+        <div class="max-w-4xl mx-auto text-center space-y-6">
+            
+            <!-- Cute Greeting Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-pink-700 dark:text-pink-300 text-xs font-semibold tracking-wide border border-pink-200 shadow-sm animate-bounce">
+                <span class="text-sm">🌸</span> Welcome to my creative sanctuary
+            </div>
+
+            <!-- Name Heading -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-slate-800 dark:text-pink-50">
+                Hi, I'm <span class="floral-gradient-text block sm:inline">Erika Rosillon</span>
+            </h1>
+
+            <!-- Subheading / Role -->
+            <p class="text-lg sm:text-2xl font-light text-pink-800/80 dark:text-pink-200/90 max-w-2xl mx-auto">
+                20-Year-Old <span class="font-semibold underline decoration-pink-300 dark:decoration-pink-500 decoration-wavy">Creative Web Developer</span> & <span class="font-semibold underline decoration-pink-300 dark:decoration-pink-500 decoration-wavy">UI/UX Designer</span> based in Calabarzon, Philippines 🌿
+            </p>
+
+            <p class="text-sm sm:text-base text-slate-600 dark:text-pink-200/70 max-w-xl mx-auto font-sans leading-relaxed">
+                Crafting dreamy, modern, and delightful digital experiences with elegant code, responsive layouts, and soft pastel aesthetics.
+            </p>
+
+            <!-- Buttons -->
+            <div class="flex flex-wrap justify-center items-center gap-4 pt-4">
+                <a href="#projects" class="px-7 py-3.5 rounded-full text-white font-semibold text-sm gradient-btn shadow-lg hover:shadow-pink-300/50 flex items-center gap-2 group">
+                    <span>View My Work</span>
+                    <i class="fa-solid fa-arrow-down group-hover:translate-y-1 transition-transform"></i>
+                </a>
+
+                <a href="#garden" class="px-7 py-3.5 rounded-full glass-card font-semibold text-sm text-pink-800 dark:text-pink-200 hover:bg-pink-100 dark:hover:bg-purple-900/40 transition-all flex items-center gap-2 shadow-sm border border-pink-200">
+                    <span>Visit Garden</span>
+                    <span class="text-base">🌷</span>
+                </a>
+            </div>
+
+            <!-- Quick Info Tags -->
+            <div class="pt-8 flex flex-wrap justify-center items-center gap-6 text-xs text-slate-500 dark:text-pink-300/70">
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-pink-400"></i>
+                    <span>Imus, Calabarzon, PH</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-sparkles text-pink-400"></i>
+                    <span>Available for Freelance & Projects</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 px-4 sm:px-6 relative z-10">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center mb-12 space-y-2">
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-pink-900 dark:text-pink-100">About Erika</h2>
+                <p class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl">Passionate about beauty in simplicity</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <!-- Profile Avatar Card -->
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative group">
+                        <!-- Floral Ring Effect -->
+                        <div class="absolute -inset-3 bg-gradient-to-r from-pink-300 via-purple-200 to-amber-200 rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-500"></div>
+                        
+                        <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-3xl overflow-hidden glass-card p-4 flex flex-col justify-between items-center text-center shadow-xl border-2 border-pink-200">
+                            <!-- Avatar Illustration Placeholder -->
+                            <div class="w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-tr from-pink-200 to-rose-100 flex items-center justify-center text-6xl shadow-inner my-auto border-4 border-white dark:border-purple-800">
+                                👩🏻‍💻
+                            </div>
+                            
+                            <div class="space-y-1 w-full bg-white/70 dark:bg-purple-950/70 p-3 rounded-2xl backdrop-blur-sm">
+                                <h3 class="font-serif font-bold text-pink-950 dark:text-pink-100 text-lg">Erika Rosillon</h3>
+                                <p class="text-xs text-pink-600 dark:text-pink-300 font-medium">Web Developer & UI/UX Artist</p>
+                                <p class="text-xs text-slate-500 dark:text-pink-200/70">Age: 20 Years Young</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio Content & Quick Badges -->
+                <div class="md:col-span-7 space-y-6">
+                    <div class="glass-card p-6 sm:p-8 rounded-3xl shadow-sm border border-pink-100 dark:border-purple-900/40 space-y-4">
+                        <h3 class="text-xl font-serif font-semibold text-pink-900 dark:text-pink-100 flex items-center gap-2">
+                            <span>Crafting digital gardens with passion</span>
+                            <span>🌺</span>
+                        </h3>
+                        <p class="text-slate-600 dark:text-pink-100/80 leading-relaxed text-sm sm:text-base">
+                            Hello! I’m <strong>Erika Rosillon</strong>, a 20-year-old developer based in Imus, Calabarzon, Philippines. I love turning concepts into clean, functional, and visually enchanting web creations.
+                        </p>
+                        <p class="text-slate-600 dark:text-pink-100/80 leading-relaxed text-sm sm:text-base">
+                            My design philosophy blends user-friendly architecture with soft, elegant aesthetic details. Whether building interactive front-end web apps or refining UI design systems in Figma, I pay careful attention to typography, colors, and smooth micro-interactions.
+                        </p>
+
+                        <!-- Stat Badges Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-pink-100 dark:border-purple-900/30">
+                            <div class="p-3 rounded-2xl bg-pink-50/60 dark:bg-purple-900/20 text-center">
+                                <span class="block font-serif font-bold text-2xl text-pink-600 dark:text-pink-300">20</span>
+                                <span class="text-xs text-slate-500 dark:text-pink-300/70">Years Old</span>
+                            </div>
+                            <div class="p-3 rounded-2xl bg-pink-50/60 dark:bg-purple-900/20 text-center">
+                                <span class="block font-serif font-bold text-2xl text-pink-600 dark:text-pink-300">15+</span>
+                                <span class="text-xs text-slate-500 dark:text-pink-300/70">Projects Done</span>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 p-3 rounded-2xl bg-pink-50/60 dark:bg-purple-900/20 text-center">
+                                <span class="block font-serif font-bold text-2xl text-pink-600 dark:text-pink-300">100%</span>
+                                <span class="text-xs text-slate-500 dark:text-pink-300/70">Love for Coding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20 px-4 sm:px-6 relative z-10 bg-pink-50/40 dark:bg-purple-950/20">
+        <div class="max-w-5xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-pink-900 dark:text-pink-100">Skills & Toolset</h2>
+                <p class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl">Technologies I cultivate</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Frontend Skills -->
+                <div class="glass-card p-6 rounded-3xl space-y-5 border border-pink-200 dark:border-purple-900/40">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center text-pink-600 dark:text-pink-300">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-pink-950 dark:text-pink-100">Frontend Development</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">HTML5 & CSS3 / Sass</span>
+                                <span class="text-pink-600 dark:text-pink-300">95%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-pink-300 to-pink-500 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">JavaScript (ES6+)</span>
+                                <span class="text-pink-600 dark:text-pink-300">88%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-pink-300 to-pink-500 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">React.js & Tailwind CSS</span>
+                                <span class="text-pink-600 dark:text-pink-300">85%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-pink-300 to-pink-500 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design & Creative Tools -->
+                <div class="glass-card p-6 rounded-3xl space-y-5 border border-pink-200 dark:border-purple-900/40">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 dark:text-purple-300">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-pink-950 dark:text-pink-100">Design & Creative</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">UI/UX & Wireframing (Figma)</span>
+                                <span class="text-pink-600 dark:text-pink-300">90%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-300 to-pink-400 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">Responsive & Mobile Design</span>
+                                <span class="text-pink-600 dark:text-pink-300">92%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-300 to-pink-400 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700 dark:text-pink-200">Creative Animations & Web Canvas</span>
+                                <span class="text-pink-600 dark:text-pink-300">80%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-pink-100 dark:bg-purple-900/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-300 to-pink-400 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soft Skill Badges -->
+            <div class="flex flex-wrap justify-center gap-3 pt-4">
+                <span class="px-4 py-2 rounded-full glass-card text-xs font-medium text-pink-700 dark:text-pink-300 border border-pink-200">🌸 Attention to Detail</span>
+                <span class="px-4 py-2 rounded-full glass-card text-xs font-medium text-pink-700 dark:text-pink-300 border border-pink-200">🌷 User Centric Thinking</span>
+                <span class="px-4 py-2 rounded-full glass-card text-xs font-medium text-pink-700 dark:text-pink-300 border border-pink-200">🌿 Continuous Learning</span>
+                <span class="px-4 py-2 rounded-full glass-card text-xs font-medium text-pink-700 dark:text-pink-300 border border-pink-200">✨ Aesthetic Visual Sense</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-20 px-4 sm:px-6 relative z-10">
+        <div class="max-w-6xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-pink-900 dark:text-pink-100">Featured Work</h2>
+                <p class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl">A selection of recent projects</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                
+                <!-- Project Card 1 -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-pink-200 dark:border-purple-900/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Header Visual -->
+                        <div class="h-52 bg-gradient-to-tr from-pink-200 via-rose-100 to-purple-100 dark:from-purple-900/60 dark:to-pink-900/40 relative flex items-center justify-center p-6 overflow-hidden">
+                            <span class="text-7xl group-hover:scale-110 transition-transform duration-500">🛍️</span>
+                            <div class="absolute top-4 right-4 bg-white/80 dark:bg-purple-950/80 px-3 py-1 rounded-full text-xs font-semibold text-pink-700 dark:text-pink-300">
+                                E-Commerce
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100">Bloom & Co. Floral Shop</h3>
+                            <p class="text-xs text-slate-600 dark:text-pink-200/80 leading-relaxed">
+                                An aesthetic online boutique store with product filters, soft cart animations, and interactive floral customizer.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">React</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">Tailwind CSS</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">UI/UX</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-pink-100 dark:border-purple-900/30">
+                        <button onclick="openModal('Bloom & Co. Floral Shop', 'An aesthetic online boutique web application designed for custom floral arrangements, integrated shopping cart state management, and custom color themes.', ['React', 'Tailwind CSS', 'Figma'], '🌸 Store preview initialized seamlessly.')" class="text-xs font-semibold text-pink-600 dark:text-pink-300 hover:underline flex items-center gap-1">
+                            <span>View Details</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-pink-200 dark:border-purple-900/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="h-52 bg-gradient-to-tr from-purple-200 via-pink-100 to-amber-100 dark:from-purple-950 dark:to-pink-900/50 relative flex items-center justify-center p-6 overflow-hidden">
+                            <span class="text-7xl group-hover:scale-110 transition-transform duration-500">📖</span>
+                            <div class="absolute top-4 right-4 bg-white/80 dark:bg-purple-950/80 px-3 py-1 rounded-full text-xs font-semibold text-pink-700 dark:text-pink-300">
+                                Productivity App
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100">Pastel Journal & Planner</h3>
+                            <p class="text-xs text-slate-600 dark:text-pink-200/80 leading-relaxed">
+                                A cozy daily planner web app with mood tracking, task lists, soft ambient music prompts, and local storage support.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">JavaScript ES6</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">LocalStorage</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">CSS Grid</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-pink-100 dark:border-purple-900/30">
+                        <button onclick="openModal('Pastel Journal & Planner', 'A minimalist personal growth application designed to keep track of daily habits, mood patterns, and creative notes in a calming environment.', ['JavaScript', 'HTML5/CSS3', 'Web Storage'], '📓 Planner interface synchronized.')" class="text-xs font-semibold text-pink-600 dark:text-pink-300 hover:underline flex items-center gap-1">
+                            <span>View Details</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-pink-200 dark:border-purple-900/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="h-52 bg-gradient-to-tr from-pink-100 via-rose-200 to-purple-200 dark:from-purple-900 dark:to-rose-950 relative flex items-center justify-center p-6 overflow-hidden">
+                            <span class="text-7xl group-hover:scale-110 transition-transform duration-500">🌷</span>
+                            <div class="absolute top-4 right-4 bg-white/80 dark:bg-purple-950/80 px-3 py-1 rounded-full text-xs font-semibold text-pink-700 dark:text-pink-300">
+                                Landing Page
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100">Flora Studio Landing</h3>
+                            <p class="text-xs text-slate-600 dark:text-pink-200/80 leading-relaxed">
+                                A high-converting studio page with micro-interactions, floating floral particles, and responsive hero banners.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">HTML5</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">Tailwind</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">Figma Design</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-pink-100 dark:border-purple-900/30">
+                        <button onclick="openModal('Flora Studio Landing', 'A polished, high-aesthetic studio website designed for creative agencies focusing on visual storytelling and seamless responsive layouts.', ['Tailwind CSS', 'Figma', 'JavaScript'], '🌷 Studio showcases live.')" class="text-xs font-semibold text-pink-600 dark:text-pink-300 hover:underline flex items-center gap-1">
+                            <span>View Details</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-pink-200 dark:border-purple-900/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="h-52 bg-gradient-to-tr from-amber-100 via-pink-100 to-purple-200 dark:from-purple-950 dark:to-pink-950 relative flex items-center justify-center p-6 overflow-hidden">
+                            <span class="text-7xl group-hover:scale-110 transition-transform duration-500">🎨</span>
+                            <div class="absolute top-4 right-4 bg-white/80 dark:bg-purple-950/80 px-3 py-1 rounded-full text-xs font-semibold text-pink-700 dark:text-pink-300">
+                                Design System
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100">Pastel UI Design System</h3>
+                            <p class="text-xs text-slate-600 dark:text-pink-200/80 leading-relaxed">
+                                A complete UI component kit featuring custom pastel buttons, modals, input cards, and accessible color tokens.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">Figma</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">CSS Tokens</span>
+                                <span class="px-2.5 py-1 rounded-md bg-pink-100/80 dark:bg-purple-900/40 text-[11px] font-medium text-pink-700 dark:text-pink-300">Accessibility</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-pink-100 dark:border-purple-900/30">
+                        <button onclick="openModal('Pastel UI Design System', 'A standardized collection of UI components crafted in Figma and exported to modular Tailwind CSS tokens for quick prototyping.', ['Design System', 'UI Tokens', 'Figma'], '🎨 Design tokens loaded.')" class="text-xs font-semibold text-pink-600 dark:text-pink-300 hover:underline flex items-center gap-1">
+                            <span>View Details</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="garden" class="py-20 px-4 sm:px-6 relative z-10 bg-pink-100/30 dark:bg-purple-950/30">
+        <div class="max-w-4xl mx-auto space-y-8 text-center">
+            
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card text-xs font-semibold text-pink-700 dark:text-pink-300 border border-pink-200">
+                    ✨ Mini Interactive Canvas
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-pink-900 dark:text-pink-100">Erika's Pastel Garden</h2>
+                <p class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl">Click anywhere inside the box to plant flowers & create sparkles!</p>
+            </div>
+
+            <!-- Garden Interactive Canvas Box -->
+            <div class="relative w-full h-80 sm:h-96 rounded-3xl glass-card overflow-hidden border-2 border-pink-300 dark:border-purple-800 shadow-inner flex items-center justify-center group cursor-pointer">
+                <canvas id="gardenCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                
+                <!-- Helper overlay text that fades out after click -->
+                <div id="gardenHint" class="pointer-events-none z-10 px-6 py-3 rounded-full bg-white/80 dark:bg-purple-950/80 backdrop-blur-sm text-pink-800 dark:text-pink-200 text-xs sm:text-sm font-semibold shadow-md flex items-center gap-2 border border-pink-200 animate-pulse">
+                    <span>Tap or click inside to bloom flowers 🌸</span>
+                </div>
+
+                <!-- Clear Garden Button -->
+                <button id="clearGardenBtn" class="absolute bottom-4 right-4 z-20 px-4 py-2 rounded-full glass-card text-xs font-semibold text-pink-700 dark:text-pink-300 hover:bg-pink-200 dark:hover:bg-purple-800 transition-all border border-pink-300 shadow-sm">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset Garden
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 px-4 sm:px-6 relative z-10">
+        <div class="max-w-5xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-pink-900 dark:text-pink-100">Get In Touch</h2>
+                <p class="text-pink-500 dark:text-pink-300 font-handwritten text-2xl">Let's cultivate something lovely together</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                
+                <!-- Direct Contact Information -->
+                <div class="md:col-span-5 space-y-6">
+                    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-pink-200 dark:border-purple-900/40 space-y-6 shadow-sm">
+                        <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100">Contact Details</h3>
+
+                        <!-- Email Card -->
+                        <div class="p-4 rounded-2xl bg-pink-50/80 dark:bg-purple-900/30 border border-pink-100 dark:border-purple-800/40 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                                <div class="w-10 h-10 rounded-xl bg-pink-200 dark:bg-pink-900/60 flex items-center justify-center text-pink-700 dark:text-pink-300 shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div class="truncate">
+                                    <span class="block text-[10px] uppercase font-semibold text-pink-500 dark:text-pink-400">Email</span>
+                                    <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-pink-100 truncate block">rosillonerika@gmail.com</span>
+                                </div>
+                            </div>
+                            <button onclick="copyToClipboard('rosillonerika@gmail.com', 'Email copied!')" class="p-2 rounded-lg bg-white dark:bg-purple-950 text-pink-600 dark:text-pink-300 hover:scale-105 transition-transform shrink-0 shadow-sm" title="Copy Email">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Phone Card -->
+                        <div class="p-4 rounded-2xl bg-pink-50/80 dark:bg-purple-900/30 border border-pink-100 dark:border-purple-800/40 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                                <div class="w-10 h-10 rounded-xl bg-pink-200 dark:bg-pink-900/60 flex items-center justify-center text-pink-700 dark:text-pink-300 shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div class="truncate">
+                                    <span class="block text-[10px] uppercase font-semibold text-pink-500 dark:text-pink-400">Phone</span>
+                                    <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-pink-100 truncate block">09773403229</span>
+                                </div>
+                            </div>
+                            <button onclick="copyToClipboard('09773403229', 'Phone number copied!')" class="p-2 rounded-lg bg-white dark:bg-purple-950 text-pink-600 dark:text-pink-300 hover:scale-105 transition-transform shrink-0 shadow-sm" title="Copy Phone">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Location Card -->
+                        <div class="p-4 rounded-2xl bg-pink-50/80 dark:bg-purple-900/30 border border-pink-100 dark:border-purple-800/40 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-pink-200 dark:bg-pink-900/60 flex items-center justify-center text-pink-700 dark:text-pink-300 shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] uppercase font-semibold text-pink-500 dark:text-pink-400">Location</span>
+                                <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-pink-100">Imus, Calabarzon, Philippines</span>
+                            </div>
+                        </div>
+
+                        <!-- Social Media Links -->
+                        <div class="pt-2">
+                            <span class="block text-xs font-semibold text-pink-800 dark:text-pink-200 mb-3">Connect on Socials</span>
+                            <div class="flex items-center gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-pink-600 dark:text-pink-300 hover:scale-110 transition-transform"><i class="fa-brands fa-github text-base"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-pink-600 dark:text-pink-300 hover:scale-110 transition-transform"><i class="fa-brands fa-linkedin-in text-base"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-pink-600 dark:text-pink-300 hover:scale-110 transition-transform"><i class="fa-brands fa-instagram text-base"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-pink-600 dark:text-pink-300 hover:scale-110 transition-transform"><i class="fa-brands fa-dribbble text-base"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Contact Message Form -->
+                <div class="md:col-span-7">
+                    <form id="contactForm" onsubmit="handleFormSubmit(event)" class="glass-card p-6 sm:p-8 rounded-3xl border border-pink-200 dark:border-purple-900/40 space-y-4 shadow-sm">
+                        <h3 class="text-xl font-serif font-bold text-pink-950 dark:text-pink-100 mb-2">Send a Message 💌</h3>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-pink-800 dark:text-pink-200">Your Name</label>
+                            <input type="text" required placeholder="e.g. Maya Lin" class="w-full px-4 py-3 rounded-2xl bg-white/70 dark:bg-purple-950/60 border border-pink-200 dark:border-purple-800 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 text-slate-800 dark:text-pink-100">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-pink-800 dark:text-pink-200">Your Email Address</label>
+                            <input type="email" required placeholder="maya@example.com" class="w-full px-4 py-3 rounded-2xl bg-white/70 dark:bg-purple-950/60 border border-pink-200 dark:border-purple-800 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 text-slate-800 dark:text-pink-100">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-pink-800 dark:text-pink-200">Message</label>
+                            <textarea rows="4" required placeholder="Write your message here..." class="w-full px-4 py-3 rounded-2xl bg-white/70 dark:bg-purple-950/60 border border-pink-200 dark:border-purple-800 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 text-slate-800 dark:text-pink-100 resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 rounded-2xl text-white font-semibold text-sm gradient-btn shadow-md flex items-center justify-center gap-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-heart text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-8 px-4 text-center border-t border-pink-200/60 dark:border-purple-900/30 relative z-10 glass-nav">
+        <div class="max-w-4xl mx-auto space-y-2">
+            <p class="font-serif font-bold text-pink-900 dark:text-pink-200 text-lg">
+                Erika Rosillon 🌸
+            </p>
+            <p class="text-xs text-slate-500 dark:text-pink-300/70">
+                Designed & Built with soft pastels, care, and code in Imus, Calabarzon, Philippines.
+            </p>
+            <p class="text-[11px] text-pink-400 dark:text-pink-400/80 pt-2 font-handwritten text-lg">
+                "Where flowers bloom, so does hope."
+            </p>
+        </div>
+    </footer>
+
+    <div id="projectModal" class="fixed inset-0 z-50 hidden flex items-center justify-center px-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-5 border-2 border-pink-300 dark:border-purple-800 relative shadow-2xl animate-float">
+            <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-pink-100 dark:bg-purple-900 text-pink-600 dark:text-pink-300 flex items-center justify-center hover:scale-110 transition-transform">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modalTitle" class="text-2xl font-serif font-bold text-pink-950 dark:text-pink-100"></h3>
+            <p id="modalDesc" class="text-xs sm:text-sm text-slate-600 dark:text-pink-200/90 leading-relaxed"></p>
+            
+            <div class="space-y-2">
+                <span class="text-xs font-semibold text-pink-800 dark:text-pink-300">Technologies Used</span>
+                <div id="modalTags" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-pink-50 dark:bg-purple-900/40 text-xs text-pink-700 dark:text-pink-300 flex items-center gap-2">
+                <span>✨</span>
+                <span id="modalStatus"></span>
+            </div>
+
+            <button onclick="closeModal()" class="w-full py-2.5 rounded-xl gradient-btn text-white font-semibold text-xs shadow-sm">
+                Close Preview
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden px-5 py-3 rounded-2xl glass-card border border-pink-300 text-pink-900 dark:text-pink-100 text-xs font-semibold shadow-xl flex items-center gap-2">
+        <span id="toastIcon">🌸</span>
+        <span id="toastMessage">Action completed!</span>
+    </div>
+
+    <script>
+        // 1. Theme Switcher Logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            showToast("Theme switched! ✨");
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 2. Clipboard Helper Function
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+            showToast(message);
+        }
+
+        // 3. Toast Alert Message
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 4. Contact Form Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            showToast("Thank you! Erika will get back to you soon 🌸");
+            e.target.reset();
+        }
+
+        // 5. Modal Logic
+        function openModal(title, desc, tags, status) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalStatus').innerText = status;
+            
+            const tagsContainer = document.getElementById('modalTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'px-2.5 py-1 rounded-md bg-pink-100 dark:bg-purple-900/60 text-xs text-pink-700 dark:text-pink-300 font-medium';
+                span.innerText = tag;
+                tagsContainer.appendChild(span);
+            });
+
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        const petalCanvas = document.getElementById('petalCanvas');
+        const pCtx = petalCanvas.getContext('2d');
+        let petals = [];
+
+        function resizePetalCanvas() {
+            petalCanvas.width = window.innerWidth;
+            petalCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizePetalCanvas);
+        resizePetalCanvas();
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * petalCanvas.width;
+                this.y = -20;
+                this.size = Math.random() * 8 + 6;
+                this.speedY = Math.random() * 1.2 + 0.6;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = ['#FFD1DC', '#FFB7C5', '#E6E6FA', '#FFF0F5'][Math.floor(Math.random() * 4)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.02) + this.speedX;
+                this.rotation += this.rotSpeed;
+
+                if (this.y > petalCanvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                pCtx.save();
+                pCtx.translate(this.x, this.y);
+                pCtx.rotate((this.rotation * Math.PI) / 180);
+                pCtx.globalAlpha = this.opacity;
+                pCtx.fillStyle = this.color;
+
+                pCtx.beginPath();
+                pCtx.moveTo(0, 0);
+                pCtx.bezierCurveTo(-this.size, -this.size / 2, -this.size, this.size, 0, this.size * 1.5);
+                pCtx.bezierCurveTo(this.size, this.size, this.size, -this.size / 2, 0, 0);
+                pCtx.fill();
+
+                pCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 35; i++) {
+            petals.push(new Petal());
+        }
+
+        function animatePetals() {
+            pCtx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+            petals.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        const gardenCanvas = document.getElementById('gardenCanvas');
+        const gCtx = gardenCanvas.getContext('2d');
+        let flowers = [];
+
+        function resizeGardenCanvas() {
+            const rect = gardenCanvas.parentElement.getBoundingClientRect();
+            gardenCanvas.width = rect.width;
+            gardenCanvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeGardenCanvas);
+        resizeGardenCanvas();
+
+        class Flower {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.maxSize = Math.random() * 16 + 12;
+                this.currentSize = 0;
+                this.growthRate = Math.random() * 0.8 + 0.4;
+                this.petalCount = Math.floor(Math.random() * 3) + 5;
+                this.color = ['#FFB7C5', '#FFD1DC', '#E6E6FA', '#F4E0B9', '#E08DA1'][Math.floor(Math.random() * 5)];
+                this.centerColor = '#FFF';
+            }
+
+            update() {
+                if (this.currentSize < this.maxSize) {
+                    this.currentSize += this.growthRate;
+                }
+            }
+
+            draw() {
+                gCtx.save();
+                gCtx.translate(this.x, this.y);
+
+                // Stem
+                gCtx.strokeStyle = '#D8E2DC';
+                gCtx.lineWidth = 3;
+                gCtx.beginPath();
+                gCtx.moveTo(0, 0);
+                gCtx.lineTo(0, 25);
+                gCtx.stroke();
+
+                // Petals
+                gCtx.fillStyle = this.color;
+                for (let i = 0; i < this.petalCount; i++) {
+                    const angle = (i * 2 * Math.PI) / this.petalCount;
+                    gCtx.save();
+                    gCtx.rotate(angle);
+                    gCtx.beginPath();
+                    gCtx.arc(0, this.currentSize / 1.5, this.currentSize / 2, 0, Math.PI * 2);
+                    gCtx.fill();
+                    gCtx.restore();
+                }
+
+                // Center
+                gCtx.fillStyle = this.centerColor;
+                gCtx.beginPath();
+                gCtx.arc(0, 0, this.currentSize / 3, 0, Math.PI * 2);
+                gCtx.fill();
+
+                gCtx.restore();
+            }
+        }
+
+        function handleGardenClick(e) {
+            const rect = gardenCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Hide hint
+            const hint = document.getElementById('gardenHint');
+            if (hint) hint.style.display = 'none';
+
+            flowers.push(new Flower(x, y));
+            showToast("Planted a new flower! 🌷");
+        }
+
+        gardenCanvas.addEventListener('click', handleGardenClick);
+
+        document.getElementById('clearGardenBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            flowers = [];
+            gCtx.clearRect(0, 0, gardenCanvas.width, gardenCanvas.height);
+            showToast("Garden cleared!");
+        });
+
+        function animateGarden() {
+            gCtx.clearRect(0, 0, gardenCanvas.width, gardenCanvas.height);
+            flowers.forEach(f => {
+                f.update();
+                f.draw();
+            });
+            requestAnimationFrame(animateGarden);
+        }
+
+        // Start animations on window load
+        window.onload = function() {
+            animatePetals();
+            animateGarden();
+        };
+    </script>
+</body>
+</html>
